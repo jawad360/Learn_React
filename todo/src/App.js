@@ -6,6 +6,7 @@ import Todos from './components/Todos';
 import AddTodo from './components/AddTodo';
 import Header from './components/layouts/Header';
 import About from './components/pages/About';
+import axios from 'axios';
 class App extends Component {
   state = {
     todos : [
@@ -45,6 +46,11 @@ class App extends Component {
     }
 
     this.setState({ todos : [...this.state.todos, todo]});
+  }
+
+  componentDidMount () {
+    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+    .then(res => this.setState({todos : res.data}));
   }
 
   render() {
