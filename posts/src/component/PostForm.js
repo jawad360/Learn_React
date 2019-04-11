@@ -1,60 +1,54 @@
-import React, {Component} from 'react';
-import axios from 'axios';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import {createPost} from '../actions/postAction';
 class PostForm extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            title : '',
-            body : ''
+            title: '',
+            body: ''
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     onChange(e) {
-        this.setState({[e.target.name] : e.target.value})
+        this.setState({ [e.target.name]: e.target.value })
     }
 
     onSubmit(e) {
         e.preventDefault();
         const post = {
-            title : this.state.title,
-            body : this.state.body
+            title: this.state.title,
+            body: this.state.body
         };
-        this.setState({
-            title : '',
-            body : ''
-        });
-        axios.post('https://jsonplaceholder.typicode.com/posts', post).then( res => {
-            console.log(res);
-        });
+        this.props.createPost(post);
     }
 
-    render(){
+    render() {
         return (
             <div>
                 <h1>Add Post</h1>
                 <form onSubmit={this.onSubmit}>
                     <div>
-                        <label>Title</label><br/>
+                        <label>Title</label><br />
                         <input type="input" name="title" value={this.state.title}
-                            onChange={this.onChange}/>
+                            onChange={this.onChange} />
                     </div>
                     <div>
-                        <label>Body</label><br/>
-                        <textarea  name="body" value={this.state.body}
-                            onChange={this.onChange}/>
+                        <label>Body</label><br />
+                        <textarea name="body" value={this.state.body}
+                            onChange={this.onChange} />
                     </div>
                     <div>
                         <button type="submit">Submit</button>
                     </div>
                 </form>
-                <hr/>
+                <hr />
             </div>
         );
     }
 }
 
-export default PostForm;
+export default connect(null, {createPost})(PostForm);

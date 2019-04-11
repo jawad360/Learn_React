@@ -1,23 +1,21 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-
+import { connect } from 'react-redux';
+import {fetchPost} from '../actions/postAction';
 class Posts extends Component {
 
-    constructor (props) {
-        super(props);
-        this.state = {
-            posts : []
+    componentWillMount(){
+        this.props.fetchPost();
+    }
+
+    componentWillReceiveProps(nextProp){
+        if(nextProp.newPost){
+            console.log('NewPOsyt'+JSON.stringify(nextProp));
+            this.props.posts.unshift(nextProp.newPost);
         }
     }
 
-    componentWillMount() {
-        axios.get('https://jsonplaceholder.typicode.com/posts').then(res => {
-            this.setState({posts : res.data});
-        });
-    }
-
     render () {
-        const postItems = this.state.posts.map((post) => (
+        const postItems = this.props.posts.map(post => (
             <div key={post.id}>
                 <h3>{post.title}</h3>
                 <p>{post.body}</p>
@@ -32,4 +30,9 @@ class Posts extends Component {
     }
 }
 
-export default Posts;
+const mapStateToProp = state => ({
+    posts : state.posts.items,
+    newPost: state.posts.item
+})
+
+export default connect(mapStateToProp, {fetchPost})(Posts)
